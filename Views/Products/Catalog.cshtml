@@ -1,0 +1,44 @@
+@model Dictionary<string, List<StockControlPrototype.Models.Product>>
+@{
+    ViewData["Title"] = "Katalog";
+    var query = ViewBag.Query as string;
+}
+
+@if (!string.IsNullOrWhiteSpace(query))
+{
+    <div class="card">
+        "<b>@query</b>" icin sonuclar
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="card">
+        Aramaniza uygun urun bulunamadi.
+    </div>
+}
+else
+{
+    @foreach (var group in Model)
+    {
+        <div class="card">
+            <h2>@group.Key</h2>
+            <div class="catalog-grid">
+                @foreach (var item in group.Value)
+                {
+                    <div class="catalog-card">
+                        @if (!string.IsNullOrWhiteSpace(item.ImagePath))
+                        {
+                            <img src="@item.ImagePath" alt="@item.Name" class="product-thumb" />
+                        }
+                        <h4 class="catalog-title">@item.Name</h4>
+                        <div><b>Kategori:</b> @item.Category</div>
+                        <div>@item.Code</div>
+                        <div>@item.UnitPrice.ToString("C")</div>
+                        <a class="btn btn-secondary" asp-action="Details" asp-route-id="@item.Id">Detay</a>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+}
